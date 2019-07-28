@@ -9,7 +9,7 @@
 import Foundation
 
 public protocol ContactsUseCaseProvider {
-    func searchImageForText(_ text: String, page : String, result : @escaping (FilterResult)-> Void)
+    func searchImageForText(_ text: String, page : String, result : @escaping (Result<FilterResult>)-> Void)
 }
 
 class ContactsUseCase : ContactsUseCaseProvider {
@@ -17,7 +17,7 @@ class ContactsUseCase : ContactsUseCaseProvider {
     init( platform : RepositaryProvider) {
         self.platformProvider = platform
     }
-    func searchImageForText(_ text: String, page : String, result : @escaping (FilterResult)-> Void) {
+    func searchImageForText(_ text: String, page : String, result : @escaping (Result<FilterResult>)-> Void) {
         platformProvider.searchImageForText(text, page: page, result: {
             response in
             result(response)

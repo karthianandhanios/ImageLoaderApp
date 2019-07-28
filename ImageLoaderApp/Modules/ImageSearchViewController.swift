@@ -26,7 +26,7 @@ class ViewController: UIViewController {
         
         searchBar.placeholder = "Your placeholder"
         
-        var leftNavBarButton = UIBarButtonItem(customView:searchBar)
+        let leftNavBarButton = UIBarButtonItem(customView:searchBar)
         self.navigationItem.leftBarButtonItem = leftNavBarButton
         searchBar.delegate = self
         imageSearchCollectionView.dataSource = self
@@ -42,9 +42,14 @@ extension ViewController : UISearchBarDelegate {
        searchAndUpateData(searchText: searchText)
     }
     private func searchAndUpateData(searchText :String){
-        imageViewModel?.searchImage(for: searchText, completion: {
-            DispatchQueue.main.async {
-                self.imageSearchCollectionView.reloadData()
+        imageViewModel?.searchImage(for: searchText, completion: { result in
+            switch result {
+            case .Success:
+                DispatchQueue.main.async {
+                    self.imageSearchCollectionView.reloadData()
+                }
+            case .Error(let errMsg):
+                print("Error Message ---->",errMsg)
             }
         })
     }
@@ -70,7 +75,6 @@ extension ViewController : UICollectionViewDataSource {
         return 1
     }
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        print("index path row ---->",indexPath.row , "imageSearchResult count -->",imageViewModel?.imageSearchResult.count)
         if indexPath.row == (imageViewModel?.imageSearchResult.count ?? 0) / 3  {  //numberofitem count
             updateNextSet()
         }

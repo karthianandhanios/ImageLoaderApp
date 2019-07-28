@@ -13,13 +13,18 @@ struct PhotoData  {
      let imageUrl : String
 }
 
+enum Response{
+    case Success
+    case Error(String)
+}
+
 class ImageSearchViewModel  {
     var searchText : String?
     var imageSearchResult : [PhotoData] = []
     var currentPage = 0
     var maxPage = 1
     
-    func searchImage(for text: String, completion : @escaping ()->Void)  {
+    func searchImage(for text: String, completion : @escaping (Response)->Void)  {
         if searchText != text{
             imageSearchResult = []
         }
@@ -28,13 +33,18 @@ class ImageSearchViewModel  {
         if self.currentPage < self.maxPage {
             AppStateService.shared.imageSearchUseCaseProvider.searchImageForText(text, page: String(self.currentPage + 1), result: {
                 response in
-                self.parseData(response: response)
-                self.currentPage = response.photos.page
-                self.maxPage   = response.photos.pages
-                completion()
+                switch response {
+                case .Success(let data):
+                    self.parseData(response: data)
+                    self.currentPage = data.photos.page
+                    self.maxPage   = data.photos.pages
+                    completion(.Success)
+                case .Error(let msg):
+                    completion(.Error(msg))
+                }
             })
         }else{
-            completion()
+            completion(.Error("It is alreay loaded!"))
         }
     }
     
