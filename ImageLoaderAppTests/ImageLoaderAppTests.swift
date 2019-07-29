@@ -25,7 +25,7 @@ class ImageLoaderAppTests: XCTestCase {
     func testSearchPhotos() {
         let exp = expectation(description: "Loading stories")
           var success : Bool = false
-        searchPhotosViewModel?.searchImage(for: "ka", completion: {
+        searchPhotosViewModel?.searchImage(for: "ka", completion: {_,_ in 
              print("here is the photos searched")
             success = true
              exp.fulfill()

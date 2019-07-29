@@ -21,21 +21,34 @@ class ViewController: UIViewController {
     lazy   var searchBar:UISearchBar = UISearchBar(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: 20))
     @IBOutlet weak var imageSearchCollectionView: UICollectionView!
     private var pendingRequestWorkItem: DispatchWorkItem?
+    fileprivate var lastContentOffset: CGPoint = .zero
+    
+    @IBOutlet weak var errMessageLabel: UILabel!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         imageViewModel = ImageSearchViewModel()
         
-        searchBar.placeholder = "Your placeholder"
+        searchBar.placeholder = UITitle.placeHolder
         
         let leftNavBarButton = UIBarButtonItem(customView:searchBar)
         self.navigationItem.leftBarButtonItem = leftNavBarButton
         searchBar.delegate = self
         imageSearchCollectionView.dataSource = self
         imageSearchCollectionView.delegate = self
+        showError(message: UITitle.typeSomthing)
         // Do any additional setup after loading the view.
     }
-
-
+    func showError(message : String)  {
+        errMessageLabel.superview?.bringSubviewToFront(errMessageLabel)
+        errMessageLabel.text = message
+        errMessageLabel.isHidden = false
+    }
+    func hideError()  {
+        errMessageLabel.superview?.sendSubviewToBack(errMessageLabel)
+        errMessageLabel.isHidden = false
+        errMessageLabel.text = ""
+    }
 }
 
 extension ViewController : UISearchBarDelegate {
@@ -52,18 +65,20 @@ extension ViewController : UISearchBarDelegate {
                 case .Success:
                     DispatchQueue.main.async {
                         self?.imageSearchCollectionView.reloadData()
+                        self?.hideError()
                     }
-                case .Error(let errMsg):
+                case .Error(_):
                     DispatchQueue.main.async {
                         self?.imageSearchCollectionView.reloadData()
+                        self?.showError(message: UITitle.somethingWrong)
                     }
-                    print("Error Message ---->",errMsg)
                 }
             })
         }
         pendingRequestWorkItem = requestWorkItem
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3,execute: requestWorkItem)
     }
+    
     
 }
 
@@ -85,7 +100,7 @@ extension ViewController : UICollectionViewDataSource {
         return 1
     }
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        if indexPath.row == (imageViewModel?.imageSearchResult.count ?? 0) / 3  {
+        if (indexPath.row == (imageViewModel?.imageSearchResult.count ?? 0) / 3) && (imageViewModel?.currentPage ?? 0 < imageViewModel?.maxPage ?? 0)  {
             updateNextSet()
         }
     }
@@ -120,3 +135,16 @@ extension ViewController : UICollectionViewDelegateFlowLayout {
     }
 }
 
+extension ViewController {
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        lastContentOffset = scrollView.contentOffset
+    }
+    
+    func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+        let diff = scrollView.contentOffset.y - lastContentOffset.y
+            if lastContentOffset.y > scrollView.contentOffset.y || diff > 100 {
+                searchBar.resignFirstResponder()
+            }
+        
+    }
+}

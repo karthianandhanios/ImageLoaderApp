@@ -18,6 +18,12 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="kcdfkkdfdf vbjh" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6PG-Li-LRA">
+                                <rect key="frame" x="147.5" y="464.5" width="119" height="21"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="aqK-UQ-qej">
                                 <rect key="frame" x="0.0" y="88" width="414" height="774"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -58,14 +64,17 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="aqK-UQ-qej" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="EZW-9a-ZU2"/>
+                            <constraint firstItem="6PG-Li-LRA" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="Gg9-9r-tNi"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="aqK-UQ-qej" secondAttribute="bottom" id="UPq-hh-arE"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="aqK-UQ-qej" secondAttribute="trailing" id="Vjc-0c-ewZ"/>
+                            <constraint firstItem="6PG-Li-LRA" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" id="h2B-bj-MON"/>
                             <constraint firstItem="aqK-UQ-qej" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="h5f-1x-bA6"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <navigationItem key="navigationItem" id="IT9-Ea-se8"/>
                     <connections>
+                        <outlet property="errMessageLabel" destination="6PG-Li-LRA" id="u3q-fQ-Msk"/>
                         <outlet property="imageSearchCollectionView" destination="aqK-UQ-qej" id="AQe-kg-sig"/>
                     </connections>
                 </viewController>

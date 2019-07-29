@@ -37,16 +37,22 @@ class ImageSearchViewModel  {
                 response in
                 switch response {
                 case .Success(let data):
-                    self.parseData(response: data,isPagination: data.photos.page > 1)
                     self.currentPage = data.photos.page
                     self.maxPage   = data.photos.pages
-                    completion(.Success,text)
+                    if data.photos.photo.count > 0 {
+                        self.parseData(response: data,isPagination: data.photos.page > 1)
+                        completion(.Success,text)
+                    }else{
+                        let empty  = UITitle.empty + text + "\""
+                        completion(.Error(empty), text)
+                    }
+                    
                 case .Error(let msg):
                     completion(.Error(msg),text)
                 }
             })
         }else{
-            completion(.Error("It is alreay loaded!"),text)
+            completion(.Error(""),text)
        }
     }
     

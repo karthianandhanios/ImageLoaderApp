@@ -43,3 +43,11 @@ extension UIImageView {
         downloaded(from: url, contentMode: mode)
     }
 }
+
+
+struct UITitle {
+    static let empty =  "There is no photos with key \""
+    static let typeSomthing =  "Type something to search!"
+    static let placeHolder = "Your placeholder"
+    static let somethingWrong = "Something went wrong!"
+}
