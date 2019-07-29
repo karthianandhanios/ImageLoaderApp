@@ -20,6 +20,7 @@ class ViewController: UIViewController {
     var imageViewModel : ImageSearchViewModel?
     lazy   var searchBar:UISearchBar = UISearchBar(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: 20))
     @IBOutlet weak var imageSearchCollectionView: UICollectionView!
+    private var pendingRequestWorkItem: DispatchWorkItem?
     override func viewDidLoad() {
         super.viewDidLoad()
         imageViewModel = ImageSearchViewModel()
@@ -39,20 +40,31 @@ class ViewController: UIViewController {
 
 extension ViewController : UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-       searchAndUpateData(searchText: searchText)
+        if imageViewModel?.searchText != searchText {
+            searchAndUpateData(searchText: searchText)
+        }
     }
     private func searchAndUpateData(searchText :String){
-        imageViewModel?.searchImage(for: searchText, completion: { result in
-            switch result {
-            case .Success:
-                DispatchQueue.main.async {
-                    self.imageSearchCollectionView.reloadData()
+        pendingRequestWorkItem?.cancel()
+        let requestWorkItem = DispatchWorkItem { [weak self] in
+            self?.imageViewModel?.searchImage(for: searchText, completion: { result,text in
+                switch result {
+                case .Success:
+                    DispatchQueue.main.async {
+                        self?.imageSearchCollectionView.reloadData()
+                    }
+                case .Error(let errMsg):
+                    DispatchQueue.main.async {
+                        self?.imageSearchCollectionView.reloadData()
+                    }
+                    print("Error Message ---->",errMsg)
                 }
-            case .Error(let errMsg):
-                print("Error Message ---->",errMsg)
-            }
-        })
+            })
+        }
+        pendingRequestWorkItem = requestWorkItem
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3,execute: requestWorkItem)
     }
+    
 }
 
 extension ViewController : UICollectionViewDataSource {
@@ -66,8 +78,6 @@ extension ViewController : UICollectionViewDataSource {
         let result = imageViewModel?.imageSearchResult[indexPath.row]
         cell.backgroundColor = .black
         cell.imageView.downloaded(from: result?.imageUrl)
-       // cell.imageView.image = UIImagetit.init(named: "test_image")
-        // Configure the cell
         return cell
     }
     
@@ -75,7 +85,7 @@ extension ViewController : UICollectionViewDataSource {
         return 1
     }
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        if indexPath.row == (imageViewModel?.imageSearchResult.count ?? 0) / 3  {  //numberofitem count
+        if indexPath.row == (imageViewModel?.imageSearchResult.count ?? 0) / 3  {
             updateNextSet()
         }
     }

@@ -24,9 +24,11 @@ class ImageSearchViewModel  {
     var currentPage = 0
     var maxPage = 1
     
-    func searchImage(for text: String, completion : @escaping (Response)->Void)  {
+    func searchImage(for text: String, completion : @escaping (Response,String)->Void)  {
         if searchText != text{
             imageSearchResult = []
+            currentPage = 0
+            maxPage = 1
         }
         searchText =  text
         //TODO: avoid calling this 2-3 times
@@ -35,21 +37,24 @@ class ImageSearchViewModel  {
                 response in
                 switch response {
                 case .Success(let data):
-                    self.parseData(response: data)
+                    self.parseData(response: data,isPagination: data.photos.page > 1)
                     self.currentPage = data.photos.page
                     self.maxPage   = data.photos.pages
-                    completion(.Success)
+                    completion(.Success,text)
                 case .Error(let msg):
-                    completion(.Error(msg))
+                    completion(.Error(msg),text)
                 }
             })
         }else{
-            completion(.Error("It is alreay loaded!"))
-        }
+            completion(.Error("It is alreay loaded!"),text)
+       }
     }
     
-    private func parseData(response : FilterResult){
-        var images : [PhotoData] = imageSearchResult
+    private func parseData(response : FilterResult, isPagination : Bool){
+        var images : [PhotoData] = []
+        if isPagination {
+            images = imageSearchResult
+        }
         response.photos.photo.map{
             let imageUrl = "https://farm" + String($0.farm) + ".static.flickr.com/" + $0.server + "/" + $0.id + "_" + $0.secret + ".jpg"
             let photo = PhotoData.init(id: $0.id, imageUrl: imageUrl)
