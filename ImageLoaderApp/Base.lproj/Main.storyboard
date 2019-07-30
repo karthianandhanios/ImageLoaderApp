@@ -43,11 +43,11 @@
                                             <subviews>
                                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="KNy-R6-MDg">
                                                     <rect key="frame" x="0.0" y="0.0" width="140" height="88"/>
-                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <color key="backgroundColor" red="0.90274032360406087" green="0.90274032360406087" blue="0.90274032360406087" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 </imageView>
                                             </subviews>
                                         </view>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="backgroundColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.93725490196078431" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="trailing" secondItem="KNy-R6-MDg" secondAttribute="trailing" id="2GP-sD-Ya6"/>
                                             <constraint firstItem="KNy-R6-MDg" firstAttribute="top" secondItem="tFk-qg-te8" secondAttribute="top" id="80O-bY-S2T"/>
